@@ -65,7 +65,20 @@ if (($high_floor == 0) || ($low_floor == 0)) {
     $low_floor = 314;
     $now = '<span style="color: red;">28.09.2020 ' .
         '(обновление сломалось, напишите <a href=https://t.me/unxed>админу</a>)</span>';
-}                                                                                        
+} else {
+
+    $log = file('log.csv');
+    $exists = false;
+    foreach ($log as $line) {
+        $parts = explode(',', $line);
+        $exists = $exists || ($parts[0] == date('m.Y'));
+    }
+    if (!$exists) {
+        $fp = fopen('log.csv', 'a');
+        fwrite($fp, date('m.Y') . ',' . $high_floor . ',' . $low_floor . "\n");
+        fclose($fp);            
+    }
+}
 
 $percent = intval($low_floor / ($high_floor + $low_floor) * 100);
 
