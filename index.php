@@ -67,6 +67,8 @@ if (($high_floor == 0) || ($low_floor == 0)) {
         '(обновление сломалось, напишите <a href=https://t.me/unxed>админу</a>)</span>';
 }                                                                                        
 
+$percent = intval($low_floor / ($high_floor + $low_floor) * 100);
+
 echo '
 <html>
     <head>
@@ -79,8 +81,9 @@ echo '
     </head>
     <body>
         <center>
-            <h1>' . $high_floor . ' — ' . $low_floor . '</h1>
-            <h3>трамваев в СПб с высоким полом — трамваев в СПб с низким полом</h3>
+            <h1>' . $high_floor . ' : ' . $low_floor . '</h1>
+            <h3>[трамваев в СПб с высоким полом : трамваев в СПб с низким полом]</h3>
+            <h3>вероятность встретить трамвай с низким полом — ' . $percent . '%</h3>
             <h3>по <a href=https://transphoto.org/show.php?t=1&cid=2>данным</a> на ' . $now . '</h3>
             <br/><br/><br/><br/>
             <small>
