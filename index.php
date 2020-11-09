@@ -31,7 +31,7 @@ $high_floor = 0;
 foreach ($trams as $tram) {
     $count = $tram[2];
     $count = explode(' / ', $count);
-    $count = $count[0];
+    $count = $count[1]; // считаем только действующий ПС
     if (
         ($tram[1] == 'ПР (18М)')
        )
