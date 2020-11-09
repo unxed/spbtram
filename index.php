@@ -38,15 +38,15 @@ foreach ($trams as $tram) {
     {
         // serivce
     } else if (
-        ($tram[1] == 'ЛВС-86К') ||
-        ($tram[1] == 'ЛВС-86М2') ||
-        ($tram[1] == 'ЛВС-86К-М') ||
-        ($tram[1] == '71-134К (ЛМ-99К)') ||
-        ($tram[1] == '71-134А (ЛМ-99АВ)') ||
-        ($tram[1] == 'ЛМ-68М') ||
-        ($tram[1] == '71-88Г (23М0000)') ||
+        ($tram[1] == 'ЛМ-68М')            ||   // перенесен в служебные
+        ($tram[1] == 'ЛВС-86К')           ||
+        ($tram[1] == 'ЛВС-86М2')          ||
+        ($tram[1] == 'ЛВС-86К-М')         ||
         ($tram[1] == '71-147К (ЛВС-97К)') ||
-        ($tram[1] == '71-147А (ЛВС-97А)')
+        ($tram[1] == '71-147А (ЛВС-97А)') ||
+        ($tram[1] == '71-134К (ЛМ-99К)')  ||
+        ($tram[1] == '71-134А (ЛМ-99АВ)') ||
+        ($tram[1] == '71-88Г (23М0000)')       // перенесен в служебные
        )
     {
         $high_floor += $count;
@@ -98,14 +98,51 @@ echo '
             <h3>[трамваев в СПб с высоким полом : трамваев в СПб с низким полом]</h3>
             <h3>вероятность встретить трамвай с низким полом — ' . $percent . '%</h3>
             <h3>по <a href=https://transphoto.org/show.php?t=1&cid=2>данным</a> на ' . $now . '</h3>
-            <br/><br/><br/><br/>
+            <br/>
             <small>
+                Полностью высокопольными считаются ЛВС-86 и ЛВС-97 (во всех модификациях),<br/>
+                а также ЛМ-99 (кроме модификации АВН).<br/>
+<!--
                 Полностью высокопольными считаются ЛВС-86 и ЛВС-97 (во всех модификациях),<br/>
                 ЛМ-99 (кроме модификации АВН) и ЛМ-68 (кроме модификаций М2 и М3).<br/>
                 Служебный ПР (18М) не учитывается.<br/>
+-->
                 Остальные модели считаются [хотя бы частично] низкопольными.
                 <a href=https://t.me/unxed>Обратная связь</a>.
             </small>
+
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+              google.charts.load(\'current\', {\'packages\':[\'corechart\']});
+              google.charts.setOnLoadCallback(drawChart);
+
+              function drawChart() {
+                var data = google.visualization.arrayToDataTable([
+                  [\'Месяц.Год\', \'Низкий пол\', \'Высокий пол\'],
+';
+
+foreach ($log as $line) {
+    $parts = explode(',', $line);
+    echo "['" . $parts[0] . "', " . $parts[2] . ", " . $parts[1] . "],";
+}
+
+echo '
+                ]);
+
+                var options = {
+                  title: \'Трамваи в СПб\',
+                  curveType: \'function\',
+                  legend: { position: \'bottom\' }
+                };
+
+                var chart = new google.visualization.LineChart(document.getElementById(\'curve_chart\'));
+
+                chart.draw(data, options);
+              }
+            </script>
+
+            <div id="curve_chart" style="width: 900px; height: 500px"></div>
+
         </center>
     </body>
 </html>
