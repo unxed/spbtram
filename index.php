@@ -54,6 +54,37 @@ foreach ($trams as $tram) {
     } else {
         $low_floor += $count;
     }
+
+    // get canonical model name
+    $tkk = false;
+    if (strpos($tram[1], '71-931М') === 0) {
+        $name = preg_replace('/(71-931М).*/', '$1', $tram[1]);
+    } else if (strpos($tram[1], '71-') === 0) {
+        $name = preg_replace('/((\d+)-(\d+)).*/', '$1', $tram[1]);
+    } else if (strpos($tram[1], 'ЛМ-68М2') === 0) {
+        $name = preg_replace('/(ЛМ-68М2).*/', '$1', $tram[1]);
+    } else if (strpos($tram[1], 'ЛМ-68М3') === 0) {
+        $name = $tram[1];
+    } else if (strpos($tram[1], 'Л') === 0) {
+        $name = preg_replace('/(([ЛВСМ])-(\d+)).*/', '$1', $tram[1]);
+    } else if (strpos($tram[1], 'ТС') === 0) {
+        $name = 'ЛМ-68МЧ';
+    } else if (strpos($tram[1], 'Stadler B85600M') === 0) {
+        $tkk = true;
+        $name = $tram[1];
+    } else if (strpos($tram[1], 'БКМ 84300М') === 0) {
+        $name = 'БКМ-84300М';
+    } else {
+        $name = $tram[1];
+    }
+
+    if ($count > 0) {
+        if ($tkk) {
+            $trams_norm2[$name] += $count;
+        } else {
+            $trams_norm[$name] += $count;
+        }
+    }
 }
 
 $now = date('d.m.Y');
@@ -150,5 +181,24 @@ echo '
         </center>
     </body>
 </html>
+
 ';
+
+echo "<!--\n\n";
+foreach ($trams_norm as $k=>$v) {
+    if ($k == '71-134')  { $k = '71-134|ЛМ-99'; }
+    if ($k == '71-147')  { $k = '71-147|ЛВС-97'; }
+    if ($k == '71-152')  { $k = '71-152|ЛВС-2005'; }
+    if ($k == '71-153')  { $k = '71-153|ЛМ-2008'; }
+    if ($k == '71-923')  { $k = '71-923|Богатырь'; }
+    if ($k == '71-923М') { $k = '71-923|Богатырь-М'; }
+    if ($k == '71-931')  { $k = '71-931|Витязь'; }
+    if ($k == '71-931М') { $k = '71-931|Витязь-М'; }
+    echo "|-\n|[[" . $k . "]]\n|" . $v . "\n";
+}
+echo "\n\n";
+foreach ($trams_norm2 as $k=>$v) {
+    echo "|-\n|[[" . $k . "]]\n|" . $v . "\n";
+}
+echo "\n\n-->";
 
